@@ -4,7 +4,7 @@ terraform {
   required_providers {
     google = {
       source = "hashicorp/gcp"
-      version = "6.10.0"
+      version = "§ > 6.10.0"
     }
   }
 }
@@ -21,14 +21,14 @@ terraform {
 
 # Provider configuration
 provider "google" {
-  credentials = file("<YOUR_CREDENTIALS_JSON_PATH>")
-  project     = "<YOUR_PROJECT_ID>"
-  region      = "us-central1"
+  credentials = "${credentials}"
+  project     = "${project_id}"
+  region      = "${region}"
 }
 
 # Create a VPC network
 resource "google_compute_network" "vpc_network" {
-  name                    = "my-vpc-network"
+  name                    = "${my-vpc-network}"
   auto_create_subnetworks  = false
 }
 
@@ -37,14 +37,14 @@ resource "google_compute_subnetwork" "subnet" {
   name          = "my-subnet"
   network       = google_compute_network.vpc_network.id
   ip_cidr_range = "10.0.0.0/24"
-  region        = "us-central1"
+  region        = "${region}"
 }
 
 # Create a Compute Engine VM instance
 resource "google_compute_instance" "vm_instance" {
-  name         = "my-vm-instance"
-  machine_type = "e2-medium"
-  zone         = "us-central1-a"
+  name         = "${vm_instance}"
+  machine_type = "${machine_type}"
+  zone         = "${zone}"
 
   boot_disk {
     initialize_params {
@@ -65,7 +65,7 @@ resource "google_compute_instance" "vm_instance" {
 resource "google_storage_bucket" "storage_bucket" {
   name          = "my-unique-bucket-name-12345"
   location      = "US"
-  storage_class = "STANDARD"
+  storage_class = "${storage_class}"
   force_destroy = true
 }
 
