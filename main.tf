@@ -21,15 +21,17 @@ terraform {
 
 # Provider configuration
 provider "google" {
-  credentials = "${credentials}"
-  project     = "${project_id}"
-  region      = "${region}"
+  credentials = file("<file name>")
+  project     = "project id"
+  region      = "us-central1"
 }
 
 # Create a VPC network
 resource "google_compute_network" "vpc_network" {
-  name                    = "${my-vpc-network}"
-  auto_create_subnetworks  = false
+  project                 = "charged-state-441016-j3"
+  name                    = "vpc-network"
+  auto_create_subnetworks = true
+  mtu                     = 1460
 }
 
 # Create a Subnet
@@ -37,14 +39,14 @@ resource "google_compute_subnetwork" "subnet" {
   name          = "my-subnet"
   network       = google_compute_network.vpc_network.id
   ip_cidr_range = "10.0.0.0/24"
-  region        = "${region}"
+  region        = "${var.region}"
 }
 
 # Create a Compute Engine VM instance
-resource "google_compute_instance" "vm_instance" {
-  name         = "${vm_instance}"
-  machine_type = "${machine_type}"
-  zone         = "${zone}"
+resource "google_compute_instance" "default" {
+  name         = "vm-instance"
+  machine_type = "${var.machine_type}"
+  zone         = "${var.zone}"
 
   boot_disk {
     initialize_params {
@@ -62,10 +64,9 @@ resource "google_compute_instance" "vm_instance" {
 }
 
 # Create a Google Cloud Storage bucket
-resource "google_storage_bucket" "storage_bucket" {
-  name          = "my-unique-bucket-name-12345"
+resource "google_storage_bucket" "auto-expire" {
+  name          = "no-public-access-bucket"
   location      = "US"
-  storage_class = "${storage_class}"
   force_destroy = true
+  public_access_prevention = "enforced"
 }
-
