@@ -1,0 +1,6 @@
+project_id = "project_id"
+my-vpc-network = "my-first-vpc-network"
+vm_instance = "my_test_vm_instance"
+machine_type = "e2-medium"
+zone = "us-central1-a"
+storage_class = "STANDARD"
